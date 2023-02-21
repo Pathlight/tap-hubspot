@@ -1,0 +1,274 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": [
+          "string"
+        ]
+      },
+      "assignedTo": {
+        "type": [
+          "string"
+        ]
+      },
+      "inReplyToId": {
+        "type": [
+          "string"
+        ]
+      },
+      "createdAt": {
+        "type": [
+          "null", 
+          "string"
+        ],
+        "format": "date-time"
+      },
+      "updatedAt": {
+        "type": [
+          "null", 
+          "string"
+        ],
+        "format": "date-time"
+      },
+      "createdBy": {
+        "type": [
+          "null", 
+          "string"
+        ]
+      },
+      "client": {
+          "type": "object",
+          "properties": {
+            "clientType": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "integrationAppId": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            }
+          }
+      },
+      "senders": {
+        "type": [
+          "null",
+          "array"
+        ],
+        "items": {
+          "type": [
+            "object"
+          ],
+          "properties":{
+            "actorId": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "name": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "senderField": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "deliveryIdentifier": {
+              "type": [
+                "object"
+              ],
+              "properties":{
+                "type": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "value": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                }
+              }
+            }
+      
+          }
+        }
+      },
+      "thread_id": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "newStatus": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "recipients": {
+        "type": [
+          "null",
+          "array"
+        ],
+        "items": {
+          "type": [
+            "object"
+          ],
+          "properties":{
+            "recipientField": {
+              "type": [
+                "null",
+                "string"
+            ]
+          },
+          "actorId": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+            "deliveryIdentifiers": {
+              "type": [
+                "null",
+                "array"
+              ],
+              "items": {
+               "type": [
+                  "object"
+                ],
+                "properties":{
+                  "type": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  },
+                  "value": {
+                    "type": [
+                      "null",
+                      "string"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "archived": {
+        "type": [
+          "null",
+          "boolean"
+        ]
+      },
+      "text": {
+        "type": [
+          "null", 
+          "string"
+        ]
+      },
+      "richText": {
+        "type": [ 
+          "null",
+          "string"
+        ]
+      },
+      "subject": {
+        "type": [ 
+          "null",
+          "string"
+        ]
+      },
+      "truncationStatus": {
+        "type": [ 
+          "null",
+          "string"
+        ]
+      },
+      "status":{
+        "type": "object",
+        "properties": {
+          "statusType":{
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "direction": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "channelId": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "channelAccountId": {
+        "type": [
+          "null",
+          "integer"
+        ]
+      },
+      "type": {
+        "type": [
+          "null",
+          "string"
+        ]
+      },
+      "attachments":{
+        "type": [
+          "null",
+          "array"
+        ],
+        "items":{
+          "type":[
+            "object"
+          ],
+          "properties":{
+            "fileId": {
+              "type": [
+                "null",
+                "integer"
+              ]
+            },
+            "url": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "fileUsageType": {
+              "type": [
+                "null",
+                "string"
+              ]
+            },
+            "type": {
+              "type": [
+                "null",
+                "string"
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+  

@@ -1,0 +1,77 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": [
+        "integer"
+      ]
+    },
+    "createdAt": {
+      "type": [
+        "null", 
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "closedAt": {
+      "type": [
+        "null", 
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "status": {
+      "type": [
+        "null", 
+        "string"
+      ]
+    },
+    "assignedTo": {
+      "type": [ 
+        "string"
+      ]
+    },
+    "latestMessageTimestamp": {
+      "type": [
+        "null", 
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "latestMessageReceivedTimestamp": {
+      "type": [
+        "null", 
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "latestMessageSentTimestamp": {
+      "type": [
+        "null", 
+        "string"
+      ],
+      "format": "date-time"
+    },
+    "spam": {
+      "type": [
+      "boolean"
+      ]
+    },
+    "inboxId": {
+      "type": [
+        "integer"
+      ]
+    },
+    "associatedContactId": {
+      "type": [
+        "integer"
+      ]
+    },
+    "archived": {
+      "type": [
+        "boolean"
+      ]
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": [
+          "integer"
+        ]
+      },
+      "createdAt": {
+        "type": [
+          "null", 
+          "string"
+        ],
+        "format": "date-time"
+      },
+      "updatedAt": {
+        "type": [
+          "null", 
+          "string"
+        ],
+        "format": "date-time"
+      },
+      "name": {
+        "type": [
+          "null", 
+          "string"
+        ]
+      }
+    }
+  }
