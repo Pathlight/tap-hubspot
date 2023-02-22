@@ -39,8 +39,6 @@ def main():
         if parsed_args.discover:
             do_discover(client)
         else:
-            LOGGER.info("Catalog: ")
-            json.dump(parsed_args.catalog, sys.stdout, indent=2)
             sync(client,
                  parsed_args.catalog,
                  parsed_args.state)

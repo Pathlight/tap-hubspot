@@ -10,12 +10,6 @@ from requests.exceptions import ConnectionError
 
 LOGGER = singer.get_logger()
 
-class Server5xxError(Exception):
-    pass
-
-class Server429Error(Exception):
-    pass
-
 def log_backoff_attempt(details):
     LOGGER.info("Error detected communicating with Hubspot, triggering backoff: %d try",
                 details.get("tries"))
@@ -120,7 +114,7 @@ class HubspotClient(object):
             self.refresh_access_token()
 
     @backoff.on_exception(backoff.expo,
-                          (Server5xxError, RateLimitException, Server429Error, ConnectionError),
+                          (RateLimitException,ConnectionError),
                           max_tries=8,
                           on_backoff=log_backoff_attempt,
                           factor=3)
@@ -129,8 +123,6 @@ class HubspotClient(object):
                 method,
                 path=None,
                 url=None,
-                ignore_hubspot_error_codes=[],
-                ignore_http_error_codes=[],
                 **kwargs):
         
         """
@@ -161,20 +153,8 @@ class HubspotClient(object):
             except Exception as e:
                 LOGGER.info("HUBSPOT Client Exception:, %s", e)
             metrics_status_code = response.status_code
-            if response.status_code in [400, 404] and response.status_code < 500:
-                if response.status_code in ignore_http_error_codes or \
-                    (response.status_code == 400 and response.json().get('code') in ignore_hubspot_error_codes):
-                    metrics_status_code = 200
-                return None
 
             timer.tags[metrics.Tag.http_status_code] = metrics_status_code
-
-        if response.status_code >= 500:
-            raise Server5xxError()
-
-        if response.status_code == 429:
-            LOGGER.warn('Rate limit hit - 429')
-            raise Server429Error(response.text)
 
         response.raise_for_status()
 
