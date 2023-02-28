@@ -1,0 +1,783 @@
+{
+  "streams": [
+    {
+      "tap_stream_id": "messages",
+      "key_properties": [
+        "id"
+      ],
+      "schema": {
+        "properties": {
+          "id": {
+            "type": [
+              "string"
+            ]
+          },
+          "assignedTo": {
+            "type": [
+              "string"
+            ]
+          },
+          "inReplyToId": {
+            "type": [
+              "string"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "createdBy": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "client": {
+            "properties": {
+              "clientType": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              },
+              "integrationAppId": {
+                "type": [
+                  "null",
+                  "integer"
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "senders": {
+            "items": {
+              "properties": {
+                "actorId": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "name": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "senderField": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "deliveryIdentifier": {
+                  "properties": {
+                    "type": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    },
+                    "value": {
+                      "type": [
+                        "null",
+                        "string"
+                      ]
+                    }
+                  },
+                  "type": [
+                    "object"
+                  ]
+                }
+              },
+              "type": [
+                "object"
+              ]
+            },
+            "type": [
+              "null",
+              "array"
+            ]
+          },
+          "thread_id": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "newStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "recipients": {
+            "items": {
+              "properties": {
+                "recipientField": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "actorId": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "deliveryIdentifiers": {
+                  "items": {
+                    "properties": {
+                      "type": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      },
+                      "value": {
+                        "type": [
+                          "null",
+                          "string"
+                        ]
+                      }
+                    },
+                    "type": [
+                      "object"
+                    ]
+                  },
+                  "type": [
+                    "null",
+                    "array"
+                  ]
+                }
+              },
+              "type": [
+                "object"
+              ]
+            },
+            "type": [
+              "null",
+              "array"
+            ]
+          },
+          "archived": {
+            "type": [
+              "null",
+              "boolean"
+            ]
+          },
+          "text": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "richText": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "subject": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "truncationStatus": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "properties": {
+              "statusType": {
+                "type": [
+                  "null",
+                  "string"
+                ]
+              }
+            },
+            "type": "object"
+          },
+          "direction": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "channelId": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "channelAccountId": {
+            "type": [
+              "null",
+              "integer"
+            ]
+          },
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "attachments": {
+            "items": {
+              "properties": {
+                "fileId": {
+                  "type": [
+                    "null",
+                    "integer"
+                  ]
+                },
+                "url": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "fileUsageType": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                },
+                "type": {
+                  "type": [
+                    "null",
+                    "string"
+                  ]
+                }
+              },
+              "type": [
+                "object"
+              ]
+            },
+            "type": [
+              "null",
+              "array"
+            ]
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "stream": "messages",
+      "metadata": [
+        {
+          "metadata": {
+            "selected": true,
+            "inclusion": "available",
+            "table-key-properties": [
+              "id"
+            ]
+          },
+          "breadcrumb": []
+        },
+        {
+          "metadata": {
+            "inclusion": "automatic"
+          },
+          "breadcrumb": [
+            "properties",
+            "id"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "assignedTo"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "inReplyToId"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "createdAt"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "updatedAt"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "createdBy"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "client"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "senders"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "thread_id"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "newStatus"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "recipients"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "archived"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "text"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "richText"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "subject"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "truncationStatus"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "status"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "direction"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "channelId"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "channelAccountId"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "type"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "attachments"
+          ]
+        }
+      ]
+    },
+    {
+      "tap_stream_id": "threads",
+      "key_properties": [
+        "id"
+      ],
+      "schema": {
+        "properties": {
+          "id": {
+            "type": [
+              "integer"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "closedAt": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "assignedTo": {
+            "type": [
+              "string"
+            ]
+          },
+          "latestMessageTimestamp": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "latestMessageReceivedTimestamp": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "latestMessageSentTimestamp": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "spam": {
+            "type": [
+              "boolean"
+            ]
+          },
+          "inboxId": {
+            "type": [
+              "integer"
+            ]
+          },
+          "associatedContactId": {
+            "type": [
+              "integer"
+            ]
+          },
+          "archived": {
+            "type": [
+              "boolean"
+            ]
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "stream": "threads",
+      "metadata": [
+        {
+          "metadata": {
+            "selected": true,
+            "inclusion": "available",
+            "table-key-properties": [
+              "id"
+            ]
+          },
+          "breadcrumb": []
+        },
+        {
+          "metadata": {
+            "inclusion": "automatic"
+          },
+          "breadcrumb": [
+            "properties",
+            "id"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "createdAt"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "closedAt"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "status"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "assignedTo"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "latestMessageTimestamp"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "latestMessageReceivedTimestamp"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "latestMessageSentTimestamp"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "spam"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "inboxId"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "associatedContactId"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "archived"
+          ]
+        }
+      ]
+    },
+    {
+      "tap_stream_id": "inboxes",
+      "key_properties": [
+        "id"
+      ],
+      "schema": {
+        "properties": {
+          "id": {
+            "type": [
+              "integer"
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "stream": "inboxes",
+      "metadata": [
+        {
+          "metadata": {
+            "selected": true,
+            "inclusion": "available",
+            "table-key-properties": [
+              "id"
+            ]
+          },
+          "breadcrumb": []
+        },
+        {
+          "metadata": {
+            "inclusion": "automatic"
+          },
+          "breadcrumb": [
+            "properties",
+            "id"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "createdAt"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "updatedAt"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "name"
+          ]
+        }
+      ]
+    }
+  ]
+}
