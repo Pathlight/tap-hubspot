@@ -2,6 +2,7 @@
 
 import sys
 import json
+import traceback
 
 import singer
 from singer import metadata
@@ -22,8 +23,9 @@ REQUIRED_CONFIG_KEYS = [
 def do_discover(client):
     LOGGER.info('Testing authentication')
     try:
-        client.get('threads')
+        client.get('conversations/v3/conversations/threads')
     except:
+        traceback.print_exc()
         raise Exception('Error could not authenticate with Hubspot')
 
     LOGGER.info('Starting discover')
