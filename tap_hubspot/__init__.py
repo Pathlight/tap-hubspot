@@ -12,7 +12,6 @@ from tap_hubspot.sync import sync
 LOGGER = singer.get_logger()
 
 REQUIRED_CONFIG_KEYS = [ 
-    "base_url",
     "client_id",
     "client_secret",
     "access_token",
