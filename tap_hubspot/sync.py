@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+import time
 import singer
 from singer import metrics, metadata, Transformer
 from singer.bookmarks import set_currently_syncing
@@ -116,11 +117,6 @@ def sync_endpoint(client,
             'sort': sort,
             'latestMessageTimestampAfter': str(start_datetime)
         }
-    
-    if stream_name == 'messages':
-        params = {
-            'limit': str(limit)
-        }
 
     #after is the next_page_token param value for Hubspot
     while initial_load or len(after) > 0:
@@ -135,8 +131,7 @@ def sync_endpoint(client,
         data = client.get(path,
                           params=params,
                           endpoint=stream_name,
-                          ignore_hubspot_error_codes=endpoint.get('ignore_hubspot_error_codes', []),
-                          ignore_http_error_codes=endpoint.get('ignore_http_error_codes', []))
+                        )
 
         if data is None:
             return
