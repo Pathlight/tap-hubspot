@@ -5,8 +5,7 @@ import backoff
 import requests
 import singer
 from singer import metrics
-from backoff import on_exception, expo
-from ratelimit import limits, sleep_and_retry, RateLimitException
+from ratelimit import limits, sleep_and_retry
 from requests.exceptions import ConnectionError
 
 LOGGER = singer.get_logger()
@@ -124,10 +123,13 @@ class HubspotClient(object):
 
         with metrics.http_request_timer(endpoint) as timer:
             try:
-                if 'params' not in kwargs:
-                    response = self.__session.request(method, url, headers=kwargs['headers'])
+                if 'params' in kwargs:
+                    response = self.__session.request(method, url, headers=kwargs['headers'], params=kwargs['params'])
+                elif 'data' in kwargs:
+                    response = self.__session.request(method, url, headers=kwargs['headers'], data= kwargs['data'])
                 else:
-                 response = self.__session.request(method, url, headers=kwargs['headers'], params=kwargs['params'])
+                    response = self.__session.request(method, url, headers=kwargs['headers'])
+                
             except Exception as e:
                 LOGGER.info("HUBSPOT Client Exception:, %s", e)
             metrics_status_code = response.status_code
@@ -137,7 +139,7 @@ class HubspotClient(object):
         if response.status_code == 403:
             raise InvalidAuthException(response.text)
             
-        #based on the limits set, this exception should never occur
+        #based on the ratelimit 'limits' set, this exception should never occur
         if response.status_code == 429:
             LOGGER.warn('Rate limit hit - 429')
             raise Server429Error(response.text)
@@ -148,3 +150,6 @@ class HubspotClient(object):
 
     def get(self, path, **kwargs):
         return self.request('GET', path=path, **kwargs)
+    
+    def post(self, path, **kwargs):
+        return self.request('POST', path=path, **kwargs)

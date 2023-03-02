@@ -6,8 +6,7 @@ ENDPOINTS_CONFIG = {
         'data_key': 'results',
         'paginate': True,
         'provides': {
-            'thread_id': 'id',
-            'actor_id': 'assignedTo'
+            'thread_id': 'id'
         },
         'children': {
             'messages': {
@@ -17,14 +16,17 @@ ENDPOINTS_CONFIG = {
                 'url_key': 'thread_id',
                 #assuming message conversations don't exceed the maximum limit of 500
                 'paginate': False,
-            },
-            'actors': {
-                'path': 'conversations/v3/conversations/actors/{actor_id}',
-                'pk': ['id'],
-                'url_key': 'actor_id',
-                'paginate': False,
-            }
-            
+            } 
+        }
+    },
+    'actors': {
+        'persist': True,
+        'path': 'conversations/v3/conversations/actors/batch/read',
+        'data_key': 'results',
+        'pk': ['id'],
+        'paginate': False,
+        'provides': {
+            'actor_id': 'id'
         }
     },
     'inboxes': {
@@ -38,3 +40,4 @@ ENDPOINTS_CONFIG = {
         }
     }
 }
+

@@ -16,16 +16,6 @@ def write_schema(stream):
     schema = stream.schema.to_dict()
     singer.write_schema(stream.tap_stream_id, schema, stream.key_properties)
 
-def isSyncActor(url_key, key_bag):
-    #Don't make a duplicate call to fetch 'actor' information
-    if url_key in key_bag:
-        actor=key_bag['actor_id']
-        if actor not in ACTOR_LIST:
-            ACTOR_LIST.add(actor)
-            return True
-        else:
-         return False
-
 def update_key_bag_for_child(key_bag, parent_endpoint, record):
     # Constructs the properties needed to build the nested
     # paths used by the Hubspot APIs.
@@ -39,8 +29,7 @@ def update_key_bag_for_child(key_bag, parent_endpoint, record):
     if parent_endpoint and 'provides' in parent_endpoint:
         for dest_key, obj_key in parent_endpoint['provides'].items():
         
-            # Only sync children that have non-null values
-            # Example: AssigneTo (actor_id) values can be blank for ceartain 'thread' records
+            # Only sync children that have non-null 'url_key' values
             if obj_key in record:
                 updated_key_bag[dest_key] = record[obj_key]
     
@@ -71,8 +60,7 @@ def sync_child_endpoints(client,
             # # Ex. 'messages' requires a thread_Id in the path.
             child_key_bag = update_key_bag_for_child(key_bag, endpoint, record)
             
-            # Only sync children that have non-null values
-            # Example: AssigneTo (actor_id) values can be blank for ceartain 'thread' records
+            # Only sync children that have non-null 'url_key' values
             if child_endpoint['url_key'] in child_key_bag:
                 sync_endpoint(client,
                           catalog,
@@ -102,10 +90,6 @@ def sync_endpoint(client,
         write_schema(stream)
 
     path = endpoint['path'].format(**key_bag)
-    
-    #Don't make a duplicate call to fetch 'actor' information
-    if stream_name=='actors' and not isSyncActor(endpoint['url_key'], key_bag):
-        return
     
     # API Parameters
     # Maximum allowed limit is 500 
@@ -146,6 +130,12 @@ def sync_endpoint(client,
         params = {
             'limit': str(limit)
         }
+    
+    if stream_name == 'actors':
+        headers = {
+             "Content-Type": "application/json"
+        }
+        payload = '{"inputs":[' + ','.join(f'"{actor}"' for actor in ACTOR_LIST) + ']}'
 
     #after is the next_page_token param value for Hubspot
     while initial_load or len(after) > 0:
@@ -157,14 +147,23 @@ def sync_endpoint(client,
             # Update the currently syncing stream if needed.
             update_current_stream(state, stream_name)
 
-        data = client.get(path,
-                          params=params,
-                          endpoint=stream_name,
-                        )
-
+        # https://developers.hubspot.com/docs/api/conversations/conversations
+        # Use the POST batch API to fetch information on all 'actor' information at once
+        if stream_name == 'actors':
+            data = client.post(path,
+                               headers=headers,
+                               data=payload,
+                               endpoint=stream_name,
+                              )
+        else:
+            data = client.get(path,
+                              params=params,
+                              endpoint=stream_name,
+                             )
+        
         if data is None:
             return
-
+        
         if 'data_key' in endpoint:
             records = data[endpoint['data_key']]
         else:
@@ -173,7 +172,7 @@ def sync_endpoint(client,
         #if no records are received
         if not records:
             return
-
+        
         #parse records
         with metrics.record_counter(stream_name) as counter:
                 with Transformer() as transformer:
@@ -184,12 +183,18 @@ def sync_endpoint(client,
                                 record_typed = transformer.transform(record,
                                                                 schema,
                                                                 mdata)
+                                
+                                #Fetch required 'actor' records based on 'thread-->assingedTo' information
+                                if stream_name == 'threads' and 'assignedTo' in record:
+                                        ACTOR_LIST.add(record['assignedTo'])
+                                
                             except Exception as e:
                                 LOGGER.info("HUBSPOT Sync Exception: %s....Record: %s", e, record)
+                            
                             singer.write_record(stream_name, record_typed)
                             
                             counter.increment()
-        
+                            
         #get child records (if any)
         sync_child_endpoints(client,
                              catalog,
@@ -204,8 +209,12 @@ def sync_endpoint(client,
         #if records retrieved are less than the max limit
         # 1. set bookmark
         # 2. next page will be blank
-        if len(records) < limit and 'createdAt' in record:
-            singer.write_bookmark(state, stream_name, 'endDate', records[len(records)-1]['createdAt'])
+        if len(records) < limit:
+            #For bookmark use 'createdAt' timestamp if available
+            if 'createdAt' in record:
+                singer.write_bookmark(state, stream_name, 'endDate', records[len(records)-1]['createdAt'])
+            else:
+                singer.write_bookmark(state, stream_name, 'endDate', str(datetime.utcnow().isoformat()))
             return
     
         # for records that expect to be paged
