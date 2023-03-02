@@ -1,0 +1,36 @@
+{
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "type": [
+          "string"
+        ]
+      },
+      "name": {
+        "type": [
+          "null", 
+          "string"
+        ]
+      },
+      "email": {
+        "type": [
+          "null", 
+          "string"
+        ]
+      },
+      "avatar": {
+        "type": [
+          "null", 
+          "string"
+        ]
+      },
+      "type": {
+        "type": [
+          "null", 
+          "string"
+        ]
+      }
+      
+    }
+  }

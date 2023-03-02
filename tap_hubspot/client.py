@@ -5,6 +5,7 @@ import backoff
 import requests
 import singer
 from singer import metrics
+from backoff import on_exception, expo
 from ratelimit import limits, sleep_and_retry, RateLimitException
 from requests.exceptions import ConnectionError
 
@@ -57,27 +58,26 @@ class HubspotClient(object):
             'refresh_token': self.__refresh_token
         }
 
-        requestData = self.__session.request(
+        response = self.__session.request(
             "POST",
             refresh_url,
             headers=header,
             data=data)
         
-        if requestData.status_code == 403:
-            LOGGER.warn('Invalid Auth Exception - 403')
-            raise InvalidAuthException(requestData.text)
+        if response.status_code == 403:
+            raise InvalidAuthException(response.text)
 
-        self.__access_token = requestData.json()["access_token"]
-        self.__refresh_token = requestData.json()["refresh_token"]
+        self.__access_token = response.json()["access_token"]
+        self.__refresh_token = response.json()["refresh_token"]
 
         self.__expires_at = datetime.utcnow() + \
-            timedelta(seconds=requestData.json()['expires_in'] - 10) # pad by 10 seconds for clock drift
+            timedelta(seconds=response.json()['expires_in'] - 10) # pad by 10 seconds for clock drift
         
         with open(self.__config_path) as file:
             config = json.load(file)
         
-        config['access_token'] = requestData.json()['access_token']
-        config['refresh_token'] = requestData.json()['refresh_token']
+        config['access_token'] = response.json()['access_token']
+        config['refresh_token'] = response.json()['refresh_token']
 
         with open(self.__config_path, 'w') as file:
             json.dump(config, file, indent=2)
@@ -89,12 +89,16 @@ class HubspotClient(object):
         if expired_token:
             self.refresh_access_token()
 
+    #https://legacydocs.hubspot.com/apps/api_guidelines
+    # Assuming: Free and Starter Product Tier (Burst:100/10seconds)
+    # Limiting the calls to 100 for every 15 seconds to proactively avoid RateLimitException
     @backoff.on_exception(backoff.expo,
-                          (RateLimitException,ConnectionError),
+                          ConnectionError,
                           max_tries=8,
                           on_backoff=log_backoff_attempt,
                           factor=3)
-    @limits(calls=300, period=60)
+    @sleep_and_retry
+    @limits(calls=100, period=15)
     def request(self,
                 method,
                 path=None,
@@ -131,9 +135,9 @@ class HubspotClient(object):
             timer.tags[metrics.Tag.http_status_code] = metrics_status_code
         
         if response.status_code == 403:
-            LOGGER.warn('Invalid Auth Exception - 403')
             raise InvalidAuthException(response.text)
             
+        #based on the limits set, this exception should never occur
         if response.status_code == 429:
             LOGGER.warn('Rate limit hit - 429')
             raise Server429Error(response.text)
