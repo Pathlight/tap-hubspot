@@ -281,7 +281,7 @@
       "metadata": [
         {
           "metadata": {
-            "selected": true,
+            "selected": false,
             "inclusion": "available",
             "table-key-properties": [
               "id"
@@ -575,7 +575,7 @@
       "metadata": [
         {
           "metadata": {
-            "selected": true,
+            "selected": false,
             "inclusion": "available",
             "table-key-properties": [
               "id"
@@ -733,7 +733,7 @@
       "metadata": [
         {
           "metadata": {
-            "selected": true,
+            "selected": false,
             "inclusion": "available",
             "table-key-properties": [
               "id"
@@ -775,6 +775,105 @@
           "breadcrumb": [
             "properties",
             "name"
+          ]
+        }
+      ]
+    },
+    {
+      "tap_stream_id": "actors",
+      "key_properties": [
+        "id"
+      ],
+      "schema": {
+        "properties": {
+          "id": {
+            "type": [
+              "string"
+            ]
+          },
+          "name": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "avatar": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        },
+        "type": "object",
+        "additionalProperties": false
+      },
+      "stream": "actors",
+      "metadata": [
+        {
+          "metadata": {
+            "selected": false,
+            "inclusion": "available",
+            "table-key-properties": [
+              "id"
+            ]
+          },
+          "breadcrumb": []
+        },
+        {
+          "metadata": {
+            "inclusion": "automatic"
+          },
+          "breadcrumb": [
+            "properties",
+            "id"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "name"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "email"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "avatar"
+          ]
+        },
+        {
+          "metadata": {
+            "inclusion": "available"
+          },
+          "breadcrumb": [
+            "properties",
+            "type"
           ]
         }
       ]
