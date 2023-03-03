@@ -75,7 +75,6 @@ def discover():
     catalog = Catalog([])
 
     for stream_name, schema_dict in schemas.items():
-        LOGGER.info('Schema_Dict:', schema_dict)
         schema = Schema.from_dict(schema_dict)
         pk = get_pk(stream_name)
         metadata = field_metadata[stream_name]
