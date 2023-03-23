@@ -90,14 +90,14 @@ class HubspotClient(object):
 
     #https://legacydocs.hubspot.com/apps/api_guidelines
     # Assuming: Free and Starter Product Tier (Burst:100/10seconds)
-    # Limiting the calls to 100 for every 15 seconds to proactively avoid RateLimitException
+    # Limiting the calls to 100 for every 30 seconds to proactively avoid RateLimitException
     @backoff.on_exception(backoff.expo,
                           ConnectionError,
                           max_tries=8,
                           on_backoff=log_backoff_attempt,
                           factor=3)
     @sleep_and_retry
-    @limits(calls=100, period=15)
+    @limits(calls=100, period=30)
     def request(self,
                 method,
                 path=None,
