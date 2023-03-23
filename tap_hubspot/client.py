@@ -97,7 +97,7 @@ class HubspotClient(object):
                           on_backoff=log_backoff_attempt,
                           factor=3)
     @sleep_and_retry
-    @limits(calls=100, period=30)
+    @limits(calls=50, period=30)
     def request(self,
                 method,
                 path=None,
