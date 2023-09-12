@@ -108,7 +108,8 @@ def sync_endpoint(client,
         iso_format = "%Y-%m-%dT%H:%M:%S.%fZ"
         start_date = singer.get_bookmark(state,
                                      stream_name,
-                                     client.start_date)
+                                     key='endDate',
+                                     default=client.start_date)
 
         if start_date:
             start_datetime = singer.utils.strptime_to_utc(start_date)
