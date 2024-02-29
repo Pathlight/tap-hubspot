@@ -6,12 +6,9 @@ import requests
 import singer
 from singer import metrics
 from ratelimit import limits, sleep_and_retry
-from requests.exceptions import ConnectionError
+from requests.exceptions import ConnectionError, HTTPError
 
 LOGGER = singer.get_logger()
-
-class Server429Error(Exception):
-    pass
 
 class InvalidAuthException(Exception):
     pass
@@ -19,6 +16,14 @@ class InvalidAuthException(Exception):
 def log_backoff_attempt(details):
     LOGGER.info("Error detected communicating with Hubspot, triggering backoff: %d try",
                 details.get("tries"))
+
+def backoff_allowed(exception):
+    if isinstance(exception, ConnectionError):
+        return True
+    if isinstance(exception, HTTPError):
+        status_code = exception.response.status_code
+        return status_code == 429 or 500 <= status_code < 600
+    return False
 
 class HubspotClient(object):
     BASE_URL = 'https://api.hubapi.com/'
@@ -91,8 +96,8 @@ class HubspotClient(object):
     #https://legacydocs.hubspot.com/apps/api_guidelines
     # Assuming: Free and Starter Product Tier (Burst:100/10seconds)
     # Limiting the calls to 100 for every 30 seconds to proactively avoid RateLimitException
-    @backoff.on_exception(backoff.expo,
-                          ConnectionError,
+    @backoff.on_predicate(backoff.expo,
+                          predicate=backoff_allowed,
                           max_tries=8,
                           on_backoff=log_backoff_attempt,
                           factor=3)
@@ -136,17 +141,12 @@ class HubspotClient(object):
 
             timer.tags[metrics.Tag.http_status_code] = metrics_status_code
         
-        if response.status_code == 403:
-            raise InvalidAuthException(response.text)
-            
-        #based on the ratelimit 'limits' set, this exception should never occur
-        if response.status_code == 429:
-            LOGGER.warn('Rate limit hit - 429')
-            raise Server429Error(response.text)
+            if response.status_code == 403:
+                raise InvalidAuthException(response.text)
 
-        response.raise_for_status()
+            response.raise_for_status()
 
-        return response.json()
+            return response.json()
 
     def get(self, path, **kwargs):
         return self.request('GET', path=path, **kwargs)
