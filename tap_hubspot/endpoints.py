@@ -1,5 +1,5 @@
 ENDPOINTS_CONFIG = {
-    'threads': {
+    'threads': { # This API is in beta https://developers.hubspot.com/docs/api/conversations/conversations#threads-messages
         'persist': True,
         'path': 'conversations/v3/conversations/threads',
         'pk': ['id'],
