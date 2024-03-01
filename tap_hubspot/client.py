@@ -5,7 +5,7 @@ import backoff
 import requests
 import singer
 from singer import metrics
-from ratelimit import limits
+from ratelimit import limits, sleep_and_retry
 from requests.exceptions import ConnectionError, HTTPError
 
 LOGGER = singer.get_logger()
@@ -98,6 +98,7 @@ class HubspotClient(object):
                           max_tries=8,
                           on_backoff=log_backoff_attempt,
                           factor=3)
+    @sleep_and_retry
     @limits(calls=50, period=30)
     def request(self,
                 method,
