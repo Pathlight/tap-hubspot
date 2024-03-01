@@ -5,7 +5,7 @@ import backoff
 import requests
 import singer
 from singer import metrics
-from ratelimit import limits, sleep_and_retry
+from ratelimit import limits
 from requests.exceptions import ConnectionError, HTTPError
 
 LOGGER = singer.get_logger()
@@ -13,17 +13,14 @@ LOGGER = singer.get_logger()
 class InvalidAuthException(Exception):
     pass
 
+
+class HTTPRetriable(HTTPError):
+    pass
+
+
 def log_backoff_attempt(details):
     LOGGER.info("Error detected communicating with Hubspot, triggering backoff: %d try",
                 details.get("tries"))
-
-def backoff_allowed(exception):
-    if isinstance(exception, ConnectionError):
-        return True
-    if isinstance(exception, HTTPError):
-        status_code = exception.response.status_code
-        return status_code == 429 or 500 <= status_code < 600
-    return False
 
 class HubspotClient(object):
     BASE_URL = 'https://api.hubapi.com/'
@@ -96,12 +93,11 @@ class HubspotClient(object):
     #https://legacydocs.hubspot.com/apps/api_guidelines
     # Assuming: Free and Starter Product Tier (Burst:100/10seconds)
     # Limiting the calls to 100 for every 30 seconds to proactively avoid RateLimitException
-    @backoff.on_predicate(backoff.expo,
-                          predicate=backoff_allowed,
+    @backoff.on_exception(backoff.expo,
+                          (ConnectionError, HTTPRetriable),
                           max_tries=8,
                           on_backoff=log_backoff_attempt,
                           factor=3)
-    @sleep_and_retry
     @limits(calls=50, period=30)
     def request(self,
                 method,
@@ -137,14 +133,23 @@ class HubspotClient(object):
                 
             except Exception as e:
                 LOGGER.info("HUBSPOT Client Exception:, %s", e)
-            metrics_status_code = response.status_code
 
-            timer.tags[metrics.Tag.http_status_code] = metrics_status_code
+            status_code = response.status_code
+            timer.tags[metrics.Tag.http_status_code] = status_code
         
-            if response.status_code == 403:
+            if status_code == 403:
                 raise InvalidAuthException(response.text)
 
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except HTTPError as e:
+                if status_code == 429 or 500 <= status_code < 600:
+                    # NOTE: If the threads endpoint hasn't been hit with token in a while,
+                    # the first attempt will always fail for whatever reason
+                    raise HTTPRetriable(str(e), response=response)
+                raise
+            except Exception:
+                raise
 
             return response.json()
 
